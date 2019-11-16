@@ -2,24 +2,30 @@ class Cell {
   PVector pos = new PVector();
   int w;
   boolean[] walls = new boolean[4];
+  boolean visited = false;
+  ArrayList<Cell> neighbors = new ArrayList();
 
   Cell(PVector pos, int w) {
-    this.pos = pos;
+    this.pos = pos.mult(w);
     this.w = w;
     for (int i = 0; i< this.walls.length; i++) {
       this.walls[i] = true;
     }
   }
-  
-  void highlight(){
+
+  void highlight() {
     noStroke();
-    fill(133,0,150);
-    rect(pos.x,pos.y,w,w);
+    fill(133, 0, 150, 100);
+    rect(pos.x, pos.y, w, w);
+  }
+  
+  void addNeighbors(Cell c){
+    neighbors.add(c);
   }
 
 
   void show() {
-    stroke(150);
+    stroke(155);
     if (this.walls[0]) {
       line(pos.x, pos.y, pos.x + w, pos.y);
     }
@@ -29,8 +35,12 @@ class Cell {
     if (this.walls[2]) {
       line(pos.x + w, pos.y + w, pos.x, pos.y + w);
     }
-    if (this.walls[0]) {
+    if (this.walls[3]) {
       line(pos.x, pos.y + w, pos.x, pos.y);
+    }
+    if (visited) {
+      noStroke();
+      rect(pos.x, pos.y, w, w);
     }
   }
 
