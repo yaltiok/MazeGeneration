@@ -2,11 +2,15 @@ class Grid {
 
 
   Cell[][] cells;
+  //Cell[][] gridToDisplay;
   int cols, rows;
   int cellSize;
   int cellCount;
+  int count = 0;
+  int step = 50;
   Cell current;
   Cell next;
+  boolean finished = false;
   ArrayList<Cell> stack = new ArrayList();
 
 
@@ -20,11 +24,17 @@ class Grid {
   }
 
   void update() {
-    findNeighbors();
+    count++;
+    getCurrent().clearNeighbors();
+    this.next = pickNeighbor(getCurrent());
     current.visited = true;
     current.highlight();
     show();
-    if (next != null && !next.visited) {
+    //if (count % step == 0) {
+    //  println(count + " " + step);
+    //  this.gridToDisplay = updateDisplayGrid();
+    //}
+    if (next != null) {
       stack.add(getCurrent());
       removeWallBetween(getCurrent(), next);
       setCurrent(next);
@@ -33,21 +43,28 @@ class Grid {
       setCurrent(stack.get(stack.size()-1));
       stack.remove(stack.size()-1);
     }
+    finished = isFinished();
   }
+
   void fillGrid() {
     this.cells = new Cell[this.cols][this.rows];
+    //this.gridToDisplay = new Cell[this.cols][this.rows];
     for (int i = 0; i < this.cols; i++) {
       for (int j = 0; j < this.rows; j++) {
         cells[i][j] = new Cell(new PVector(i, j), cellSize);
       }
     }
     setCurrent(cells[0][0]);
+    stack.add(getCurrent());
+    //this.gridToDisplay = updateDisplayGrid();
   }
 
   void show() {
     for (int i = 0; i < this.cols; i++) {
       for (int j = 0; j < this.rows; j++) {
-        cells[i][j].show();
+        if (cells[i][j].visited) {
+          cells[i][j].show();
+        }
       }
     }
   }
@@ -76,8 +93,9 @@ class Grid {
     this.current = current;
   }
 
-  Cell pickNeighbor() {
-    if (getCurrent().neighbors.size() > 0) {
+  Cell pickNeighbor(Cell current) {
+    findNeighbors(current);
+    if (current.neighbors.size() > 0) {
       int i = floor(random(getCurrent().neighbors.size()));
       return getCurrent().neighbors.get(i);
     } else {
@@ -85,9 +103,23 @@ class Grid {
     }
   }
 
+  //Cell[][] updateDisplayGrid() {
+  //  this.gridToDisplay = new Cell[cols][rows];
+  //  for (int i = 0; i < this.cols; i++) {
+  //    for (int j = 0; j < this.rows; j++) {
+  //      this.gridToDisplay[i][j] = cells[i][j];
+  //    }
+  //  }
+  //  return gridToDisplay;
+  //}
 
-  void findNeighbors() {
-    this.next = null;
+
+  boolean isFinished() {
+    return stack.size() == 0;
+  }
+
+
+  void findNeighbors(Cell current) {
     int a = -1;
     int b = -1;
     float condition_1 = (cellSize * cols) - cellSize;
@@ -96,40 +128,34 @@ class Grid {
     Cell right = null;
     Cell bottom = null;
     Cell left = null;
-    for (int i = 0; i < cells.length; i++) {
-      for (int j = 0; j < cells[0].length; j++) {
-        if (getCurrent() == cells[i][j]) {
-          a = i;
-          b = j;
-        }
-      }
-    }
 
-    if (getCurrent().pos.y > cellSize/2) {
+    a = floor(current.pos.x / cellSize);
+    b = floor(current.pos.y / cellSize);
+
+    if (current.pos.y > cellSize/2) {
       top = this.cells[a][b - 1];
     }
-    if (getCurrent().pos.x < condition_1) {
+    if (current.pos.x < condition_1) {
       right = this.cells[a + 1][b];
     }
-    if (getCurrent().pos.y < condition_2) {
+    if (current.pos.y < condition_2) {
       bottom = this.cells[a][b + 1];
     }
-    if (getCurrent().pos.x > cellSize/2) {
+    if (current.pos.x > cellSize/2) {
       left = this.cells[a - 1][b];
     }
 
     if (top != null && !top.visited) {
-      getCurrent().addNeighbors(top);
+      current.addNeighbors(top);
     }
     if (right != null && !right.visited) {
-      getCurrent().addNeighbors(right);
+      current.addNeighbors(right);
     }
     if (bottom != null && !bottom.visited) {
-      getCurrent().addNeighbors(bottom);
+      current.addNeighbors(bottom);
     }
     if (left != null && !left.visited) {
-      getCurrent().addNeighbors(left);
+      current.addNeighbors(left);
     }
-    this.next = pickNeighbor();
   }
 }

@@ -18,14 +18,17 @@ class Cell {
     fill(133, 0, 150, 100);
     rect(pos.x, pos.y, w, w);
   }
-  
-  void addNeighbors(Cell c){
+
+  void addNeighbors(Cell c) {
     neighbors.add(c);
   }
 
+  void clearNeighbors() {
+    this.neighbors.clear();
+  }
 
   void show() {
-    stroke(155);
+    stroke(255);
     if (this.walls[0]) {
       line(pos.x, pos.y, pos.x + w, pos.y);
     }
