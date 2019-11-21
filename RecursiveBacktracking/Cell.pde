@@ -13,11 +13,10 @@ class Cell {
     }
   }
 
-  void highlight() {
-    noStroke();
-    fill(133, 0, 150, 100);
-    rect(pos.x, pos.y, w, w);
-  }
+  //void highlight() {
+  //  noStroke();
+  //  rect(pos.x, pos.y, w, w);
+  //}
 
   void addNeighbors(Cell c) {
     neighbors.add(c);
@@ -41,10 +40,10 @@ class Cell {
     if (this.walls[3]) {
       line(pos.x, pos.y + w, pos.x, pos.y);
     }
-    if (visited) {
-      noStroke();
-      rect(pos.x, pos.y, w, w);
-    }
+    //if (visited) {
+    //  noStroke();
+    //  rect(pos.x, pos.y, w, w);
+    //}
   }
 
   void deleteWall(int index) {

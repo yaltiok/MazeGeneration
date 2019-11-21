@@ -28,8 +28,8 @@ class Grid {
     getCurrent().clearNeighbors();
     this.next = pickNeighbor(getCurrent());
     current.visited = true;
-    current.highlight();
-    show();
+    //current.highlight();
+    //show();
     //if (count % step == 0) {
     //  println(count + " " + step);
     //  this.gridToDisplay = updateDisplayGrid();
